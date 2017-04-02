@@ -1,14 +1,15 @@
 // Dependencies
 import React from 'react';
+import { Button, Badge, Panel, Grid, Row, Col, Tab, Navbar, Nav, NavItem } from 'react-bootstrap';
 
 // Styles
 import './Header.scss';
 
 function Header() {
   return (
-    <header>
-      <h1>Simple React Page</h1>
-    </header>
+    <div className='header'>
+      <h1>Avalanche service</h1>
+    </div>
   );
 }
 

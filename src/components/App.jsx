@@ -5,6 +5,7 @@ import React from 'react';
 import Header from './header/Header.jsx';
 import Content from './content/Content.jsx';
 import Footer from './footer/Footer.jsx';
+import Terrain from './map/Terrain.jsx';
 
 // Styles
 import './App.scss';
@@ -13,8 +14,7 @@ function App() {
   return (
     <div className="site-wrapper">
       <Header />
-      <Content />
-      <Footer />
+      <Terrain />
     </div>
   );
 }
