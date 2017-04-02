@@ -5,6 +5,7 @@
   "keywords": [],
   "author": "vshakhov",
   "license": "MIT",
+  "homepage": "https://shakhovv.github.io/avalanche/",
   "dependencies": {
     "react-bootstrap": "^0.30.8",
     "leaflet": "^1.0.3",
