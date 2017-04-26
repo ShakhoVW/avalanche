@@ -8,14 +8,6 @@ import './Header.scss';
 const Header = ({ onClick, completed, text }) => (
   <div className='header'>
     <h1>Avalanche service</h1>
-    <Button
-        onClick={onClick}
-        style={{
-              textDecoration: completed ? 'line-through' : 'none'
-            }}
-      >
-        {text}
-    </Button>
   </div>
 )
 

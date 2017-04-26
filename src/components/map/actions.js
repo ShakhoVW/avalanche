@@ -1,33 +1,48 @@
-/*
- * action types
- */
+export const REQUEST_POSTS = 'REQUEST_POSTS'
+export const RECEIVE_POSTS = 'RECEIVE_POSTS'
+export const SELECT_REDDIT = 'SELECT_REDDIT'
+export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
-export const ADD_TODO = 'ADD_TODO'
-export const TOGGLE_TODO = 'TOGGLE_TODO'
-export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+export const selectReddit = reddit => ({
+  type: SELECT_REDDIT,
+  reddit
+})
 
-/*
- * other constants
- */
+export const invalidateReddit = reddit => ({
+  type: INVALIDATE_REDDIT,
+  reddit
+})
 
-export const VisibilityFilters = {
-  SHOW_ALL: 'SHOW_ALL',
-  SHOW_COMPLETED: 'SHOW_COMPLETED',
-  SHOW_ACTIVE: 'SHOW_ACTIVE'
+export const requestPosts = reddit => ({
+  type: REQUEST_POSTS,
+  reddit
+})
+
+export const receivePosts = (reddit, json) => ({
+  type: RECEIVE_POSTS,
+  reddit,
+  posts: json,
+  receivedAt: Date.now()
+})
+
+const fetchPosts = reddit => dispatch => {
+  dispatch(requestPosts(reddit))
+  return fetch(`http://localhost:8081/api/v1/points`)
+    .then(response => response.json())
+    .then(json => dispatch(receivePosts(reddit, json)))
 }
 
-/*
- * action creators
- */
-
-export function addTodo(text) {
-  return { type: ADD_TODO, text }
+const shouldFetchPosts = (state, reddit) => {
+  const posts = state.postsByReddit[reddit]
+  if (!posts) {
+    return true
+  }
+  if (posts.isFetching) {
+    return false
+  }
+  return posts.didInvalidate
 }
 
-export function toggleTodo(index) {
-  return { type: TOGGLE_TODO, index }
-}
-
-export function setVisibilityFilter(filter) {
-  return { type: SET_VISIBILITY_FILTER, filter }
+export const fetchPostsIfNeeded = reddit => (dispatch, getState) => {
+  return dispatch(fetchPosts(reddit))
 }

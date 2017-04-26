@@ -2,8 +2,9 @@
 import React            from 'react';
 import { render }       from 'react-dom';
 import { Provider }     from 'react-redux'
-import { createStore }  from 'redux'
-import todoApp          from './components/map/reducer'
+import thunk            from 'redux-thunk'
+import reducer          from './components/map/reducer'
+import { createStore, applyMiddleware }  from 'redux'
 
 // Components
 import App from './components/App.jsx'
@@ -11,7 +12,12 @@ import App from './components/App.jsx'
 // Styles
 import './index.scss'
 
-let store = createStore(todoApp)
+const middleware = [ thunk ]
+
+const store = createStore(
+  reducer,
+  applyMiddleware(...middleware)
+)
 
 render(
   <Provider store={store}>

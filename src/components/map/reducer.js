@@ -1,43 +1,66 @@
 import { combineReducers } from 'redux'
-import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions'
-const { SHOW_ALL } = VisibilityFilters
+import {
+  SELECT_REDDIT, INVALIDATE_REDDIT,
+  REQUEST_POSTS, RECEIVE_POSTS
+} from './actions'
 
-function visibilityFilter(state = SHOW_ALL, action) {
+const selectedReddit = (state = 'reactjs', action) => {
   switch (action.type) {
-    case SET_VISIBILITY_FILTER:
-      return action.filter
+    case SELECT_REDDIT:
+      return action.reddit
     default:
       return state
   }
 }
 
-function todos(state = [], action) {
+const posts = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  items: []
+}, action) => {
   switch (action.type) {
-    case ADD_TODO:
-      return [
+    case INVALIDATE_REDDIT:
+      return {
         ...state,
-        {
-          text: action.text,
-          completed: false
-        }
-      ]
-    case TOGGLE_TODO:
-      return state.map((todo, index) => {
-        if (index === action.index) {
-          return Object.assign({}, todo, {
-            completed: !todo.completed
-          })
-        }
-        return todo
-      })
+        didInvalidate: true
+      }
+    case REQUEST_POSTS:
+      return {
+        ...state,
+        isFetching: true,
+        didInvalidate: false
+      }
+    case RECEIVE_POSTS:
+      return {
+        ...state,
+        isFetching: false,
+        didInvalidate: false,
+        items: action.posts,
+        lastUpdated: action.receivedAt
+      }
     default:
       return state
   }
 }
 
-const todoApp = combineReducers({
-  visibilityFilter,
-  todos
+const postsByReddit = (state = { }, action) => {
+  switch (action.type) {
+    case INVALIDATE_REDDIT:
+    case RECEIVE_POSTS:
+    case REQUEST_POSTS:
+      console.log(action.reddit)
+      return {
+        ...state,
+        [action.reddit]: posts(state[action.reddit], action)
+      }
+    default:
+      return state
+  }
+}
+
+const rootReducer = combineReducers({
+  postsByReddit,
+  selectedReddit
 })
 
-export default todoApp
+export default rootReducer
