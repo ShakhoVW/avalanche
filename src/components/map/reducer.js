@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux'
 import {
-  SELECT_REDDIT, INVALIDATE_REDDIT,
-  REQUEST_POSTS, RECEIVE_POSTS
+  SELECT_POINT, INVALIDATE_POINT,
+  REQUEST_POINTS, RECEIVE_POINTS
 } from './actions'
 
-const selectedReddit = (state = 'reactjs', action) => {
+const selectedPoint = (state = 'reactjs', action) => {
   switch (action.type) {
-    case SELECT_REDDIT:
-      return action.reddit
+    case SELECT_POINT:
+      return action.point
     default:
       return state
   }
@@ -19,18 +19,18 @@ const posts = (state = {
   items: []
 }, action) => {
   switch (action.type) {
-    case INVALIDATE_REDDIT:
+    case INVALIDATE_POINT:
       return {
         ...state,
         didInvalidate: true
       }
-    case REQUEST_POSTS:
+    case REQUEST_POINTS:
       return {
         ...state,
         isFetching: true,
         didInvalidate: false
       }
-    case RECEIVE_POSTS:
+    case RECEIVE_POINTS:
       return {
         ...state,
         isFetching: false,
@@ -43,15 +43,14 @@ const posts = (state = {
   }
 }
 
-const postsByReddit = (state = { }, action) => {
+const postsByPoint = (state = { }, action) => {
   switch (action.type) {
-    case INVALIDATE_REDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      console.log(action.reddit)
+    case INVALIDATE_POINT:
+    case RECEIVE_POINTS:
+    case REQUEST_POINTS:
       return {
         ...state,
-        [action.reddit]: posts(state[action.reddit], action)
+        [action.point]: posts(state[action.point], action)
       }
     default:
       return state
@@ -59,8 +58,8 @@ const postsByReddit = (state = { }, action) => {
 }
 
 const rootReducer = combineReducers({
-  postsByReddit,
-  selectedReddit
+  postsByPoint,
+  selectedPoint
 })
 
 export default rootReducer

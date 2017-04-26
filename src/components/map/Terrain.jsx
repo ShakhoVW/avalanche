@@ -1,50 +1,49 @@
 // Dependencies
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { selectReddit, fetchPostsIfNeeded, invalidateReddit } from './actions'
 import L from 'leaflet';
+import { connect } from 'react-redux'
+import React, { Component, PropTypes } from 'react'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { selectPoint, fetchPointIfNeeded, invalidatePoint } from './actions'
 
 // Styles
 import './Terrain.scss';
 
 class Terrain extends Component {
   static propTypes = {
-      selectedReddit: PropTypes.string.isRequired,
-      posts: PropTypes.array.isRequired,
-      isFetching: PropTypes.bool.isRequired,
-      lastUpdated: PropTypes.number,
-      dispatch: PropTypes.func.isRequired
+      selectedPoint : PropTypes.string.isRequired,
+      posts         : PropTypes.array.isRequired,
+      isFetching    : PropTypes.bool.isRequired,
+      lastUpdated   : PropTypes.number,
+      dispatch      : PropTypes.func.isRequired
   }
 
   componentDidMount() {
-      const { dispatch, selectedReddit } = this.props
-      dispatch(fetchPostsIfNeeded(selectedReddit))
+      const { dispatch, selectedPoint } = this.props
+      dispatch(fetchPointIfNeeded(selectedPoint))
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedReddit !== this.props.selectedReddit) {
-      const { dispatch, selectedReddit } = nextProps
-      dispatch(fetchPostsIfNeeded(selectedReddit))
+    if (nextProps.selectedPoint !== this.props.selectedPoint) {
+      const { dispatch, selectedPoint } = nextProps
+      dispatch(fetchPointIfNeeded(selectedPoint))
     }
   }
 
-  handleChange = nextReddit => {
-    this.props.dispatch(selectReddit(nextReddit))
+  handleChange = nextPoint => {
+    this.props.dispatch(selectPoints(nextPoint))
   }
 
   handleRefreshClick = e => {
     e.preventDefault()
 
-    const { dispatch, selectedReddit } = this.props
-    dispatch(invalidateReddit(selectedReddit))
-    dispatch(fetchPostsIfNeeded(selectedReddit))
+    const { dispatch, selectedPoint } = this.props
+    dispatch(invalidatePoint(selectedPoint))
+    dispatch(fetchPointIfNeeded(selectedPoint))
   }
 
   render() {
-    const { selectedReddit, posts, isFetching, lastUpdated } = this.props
+    const { selectedPoint, posts, isFetching, lastUpdated } = this.props
     const isEmpty = posts.length === 0
-    console.log(this.state)
     return (
       <div>
           <p>
@@ -85,18 +84,18 @@ class Terrain extends Component {
 }
 
 const mapStateToProps = state => {
-  const { selectedReddit, postsByReddit } = state
+  const { selectedPoint, postsByPoint } = state
   const {
     isFetching,
     lastUpdated,
     items: posts
-  } = postsByReddit[selectedReddit] || {
+  } = postsByPoint[selectedPoint] || {
     isFetching: true,
     items: []
   }
 
   return {
-    selectedReddit,
+    selectedPoint,
     posts,
     isFetching,
     lastUpdated
